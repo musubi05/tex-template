@@ -19,6 +19,7 @@
 % 数学記号類
 \usepackage{amssymb}  
 % 定理番号
+\let\openbox\relax
 \usepackage{amsthm}  
 \newtheorem{theo}{定理}[section]
 \newtheorem{defi}{定義}[section]
@@ -44,21 +45,23 @@
 \renewcommand{\lstlistingname}{List}
 \newcommand{\Listref}[1]{\lstlistingname\ref{lst:#1}}
 \lstset{
-  language=Python,                 % 言語
-  basicstyle=\ttfamily\scriptsize, % 標準フォント
-  commentstyle=\ttfamily,          % コメントのフォント
-  keywordstyle=\bfseries,          % キーワードのフォント
-  tabsize=2,                       % タブサイズ
-  breaklines=true,                 % 長い行の自動改行
-  breakindent=20pt,                % 自動改行後のインデント
-  frame=tBRl,                      % 枠線の表示
-  framesep=5pt,                    % 枠線とコードの間隔
-  numbers=true,                    % 行番号の表示
-  numberstyle=\tiny,               % 行番号のフォント
-  stepnumber=1,                    % 行番号のステップ幅
-  numbersep=10pt,                  % 行番号と本文の間隔
-  showstringspaces=false,          % 半角スペースの表示
-  classoffset=1,                   % ?
+  language={C},                   % 
+  basicstyle={\small},            % 
+  identifierstyle={\small},       % 
+  commentstyle={\small\itshape},  % 
+  keywordstyle={\small\bfseries}, % 
+  ndkeywordstyle={\small},        % 
+  stringstyle={\small\ttfamily},  %
+  frame={tb},                     %
+  breaklines=true,                %
+  columns=[l]{fullflexible},      % 
+  numbers=left,                   % 
+  xrightmargin=0zw,               % 
+  xleftmargin=3zw,                % 
+  numberstyle={\scriptsize},      % 
+  stepnumber=1,                   %
+  numbersep=1zw,                  % 
+  lineskip=-0.5ex,                % 
 }
 
 % 図表番号の書式
