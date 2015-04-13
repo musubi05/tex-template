@@ -9,12 +9,13 @@ directory DIST_DIR
 
 # target
 TARGET_PDF = "#{DIST_DIR}/thesis.pdf"
+file TARGET_PDF => DIST_DIR
 CLOBBER.include(TARGET_PDF)
 
 # sources
 SRC_DIR = 'src'
 SOURCES = FileList["#{SRC_DIR}/**/*"]
-TEX = SOURCES.select {|s| s.match(/\.tex/i)}
+TEX = SOURCES.select {|s| s.match(/\.(tex|sty)/i)}
 MARKDOWN = SOURCES.select {|s| s.match(/\.m(ark)?d(own)?/i)}
 
 # create task to convert all images file to pdf files
@@ -72,6 +73,7 @@ CLEAN.include(MARKDOWN.ext('tex'))
 rule '.pdf' => '.tex' do |task|
   basename = File.basename(task.source)
   cd Pathname.new(task.name).parent do
+    sh 'platex', '-kanji=UTF8', basename
     sh 'platex', '-kanji=UTF8', basename
     sh 'dvipdfmx', basename.ext('dvi')
   end

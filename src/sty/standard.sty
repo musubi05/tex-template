@@ -1,0 +1,75 @@
+% 古いパッケージに警告を出す
+\RequirePackage[l2tabu, orthodox]{nag}
+
+% newtx
+\usepackage{newtxtext, newtxmath}
+
+% 図
+\usepackage[dvipdfmx]{graphicx}
+% 図の位置の固定
+\usepackage{here}
+% 図表を並べる
+\usepackage{subcaption}
+
+% enumrate の拡張
+\usepackage{enumitem}
+
+% amsmath (拡張版)
+\usepackage{mathtools}
+% 数学記号類
+\usepackage{amssymb}  
+% 定理番号
+\usepackage{amsthm}  
+\newtheorem{theo}{定理}[section]
+\newtheorem{defi}{定義}[section]
+\newtheorem{lemm}{補題}[section]
+% SI単位
+\usepackage{siunitx}
+% よく使う数式
+\newcommand{\D}{\mathrm{d}}
+\newcommand{\Div}{\mathrm{div}\,}
+\newcommand{\Grad}{\mathrm{grad}\,}
+\newcommand{\Rot}{\mathrm{rot}\,}
+\newcommand{\diff}[2]{\frac{\D #1}{\D #2}}
+\newcommand{\pdiff}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\argmin}{\mathop{\rm arg\,min}\limits}
+\newcommand{\argmax}{\mathop{\rm arg\,max}\limits}
+
+% 枠線
+\usepackage{ascmac}
+
+% ソースコード
+\usepackage{listings}
+\usepackage{sty/jlisting}
+\renewcommand{\lstlistingname}{List}
+\newcommand{\Listref}[1]{\lstlistingname\ref{lst:#1}}
+\lstset{
+  language=Python,                 % 言語
+  basicstyle=\ttfamily\scriptsize, % 標準フォント
+  commentstyle=\ttfamily,          % コメントのフォント
+  keywordstyle=\bfseries,          % キーワードのフォント
+  tabsize=2,                       % タブサイズ
+  breaklines=true,                 % 長い行の自動改行
+  breakindent=20pt,                % 自動改行後のインデント
+  frame=tBRl,                      % 枠線の表示
+  framesep=5pt,                    % 枠線とコードの間隔
+  numbers=true,                    % 行番号の表示
+  numberstyle=\tiny,               % 行番号のフォント
+  stepnumber=1,                    % 行番号のステップ幅
+  numbersep=10pt,                  % 行番号と本文の間隔
+  showstringspaces=false,          % 半角スペースの表示
+  classoffset=1,                   % ?
+}
+
+% 図表番号の書式
+\renewcommand{\tablename}{Table}
+\renewcommand{\figurename}{Fig.}
+% 式番号の書式
+\makeatletter
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+\@addtoreset{equation}{section}
+\makeatother
+% 参照コマンド
+\newcommand{\Tabref}[1]{\tablename\ref{tab:#1}}
+\newcommand{\Figref}[1]{\figurename\ref{fig:#1}}
+\newcommand{\Equref}[1]{式(\ref{equ:#1})}
