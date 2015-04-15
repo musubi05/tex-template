@@ -1,8 +1,10 @@
 % 古いパッケージに警告を出す
 \RequirePackage[l2tabu, orthodox]{nag}
 
-% newtx
-\usepackage{newtxtext, newtxmath}
+% text font
+\usepackage{newtxtext}
+% math font
+\usepackage{amssymb}
 
 % 図
 \usepackage[dvipdfmx]{graphicx}
@@ -14,10 +16,10 @@
 % enumrate の拡張
 \usepackage{enumitem}
 
-% amsmath (拡張版)
+% amsmath の拡張
 \usepackage{mathtools}
-% 数学記号類
-\usepackage{amssymb}  
+% bm
+\newcommand{\bm}[1]{\boldsymbol{#1}}
 % 定理番号
 \let\openbox\relax
 \usepackage{amsthm}  
@@ -35,6 +37,13 @@
 \newcommand{\pdiff}[2]{\frac{\partial #1}{\partial #2}}
 \newcommand{\argmin}{\mathop{\rm arg\,min}\limits}
 \newcommand{\argmax}{\mathop{\rm arg\,max}\limits}
+\newcommand{\for}{\text{~~for~~}}
+\newcommand{\suchthat}{\text{~~s.t.~~}}
+% 微調整
+\let\originalforall\forall
+\let\originalexists\exists
+\renewcommand{\forall}{\originalforall\,}
+\renewcommand{\exists}{\originalexists\,}
 
 % 枠線
 \usepackage{ascmac}
@@ -45,23 +54,23 @@
 \renewcommand{\lstlistingname}{List}
 \newcommand{\Listref}[1]{\lstlistingname\ref{lst:#1}}
 \lstset{
-  language={C},                   % 
-  basicstyle={\small},            % 
-  identifierstyle={\small},       % 
-  commentstyle={\small\itshape},  % 
-  keywordstyle={\small\bfseries}, % 
-  ndkeywordstyle={\small},        % 
-  stringstyle={\small\ttfamily},  %
-  frame={tb},                     %
-  breaklines=true,                %
-  columns=[l]{fullflexible},      % 
-  numbers=left,                   % 
-  xrightmargin=0zw,               % 
-  xleftmargin=3zw,                % 
-  numberstyle={\scriptsize},      % 
-  stepnumber=1,                   %
-  numbersep=1zw,                  % 
-  lineskip=-0.5ex,                % 
+  language={C},
+  basicstyle={\small},
+  identifierstyle={\small},
+  commentstyle={\small\itshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-0.5ex,
 }
 
 % 図表番号の書式
@@ -79,3 +88,6 @@
 
 % 段組
 \usepackage{multicol}
+
+% ヘッダ
+\usepackage{fancyhdr}
