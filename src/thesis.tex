@@ -2,11 +2,16 @@
 \usepackage{sty/mystd}
 \usepackage{sty/report}
 
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
 \title{}
 \author{}
 \date{\today}
 
 \begin{document}
-\maketitle
+\maketitle\thispagetyle{fancy}
 \section{}
 \end{document}
