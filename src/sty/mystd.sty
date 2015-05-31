@@ -12,8 +12,6 @@
 \usepackage{here}
 % 図表を並べる
 \usepackage{subcaption}
-\captionsetup[figure]{labelsep=space}
-\captionsetup[table]{labelsep=space}
 
 % enumrate の拡張
 \usepackage{enumitem}
@@ -55,15 +53,14 @@
 \usepackage{listings}
 \usepackage{sty/jlisting}
 \renewcommand{\lstlistingname}{List}
-\newcommand{\Listref}[1]{\lstlistingname\ref{lst:#1}}
 \lstset{
   language={C},
-  basicstyle={\small},
-  identifierstyle={\small},
-  commentstyle={\small\itshape},
-  keywordstyle={\small\bfseries},
-  ndkeywordstyle={\small},
-  stringstyle={\small\ttfamily},
+  basicstyle={\scriptsize},
+  identifierstyle={\scriptsize},
+  commentstyle={\scriptsize\itshape},
+  keywordstyle={\scriptsize\bfseries},
+  ndkeywordstyle={\scriptsize},
+  stringstyle={\scriptsize\ttfamily},
   frame={tb},
   breaklines=true,
   columns=[l]{fullflexible},
@@ -74,13 +71,14 @@
   stepnumber=1,
   numbersep=1zw,
   lineskip=-0.5ex,
+  tabsize=4,
 }
 % 擬似コード
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 
 % 図表番号の書式
-\renewcommand{\tablename}{Table}
+\renewcommand{\tablename}{Table~}
 \renewcommand{\figurename}{Fig.}
 % 式番号の書式
 \makeatletter
@@ -88,9 +86,10 @@
 \@addtoreset{equation}{section}
 \makeatother
 % 参照コマンド
-\newcommand{\Tabref}[1]{\tablename~\ref{tab:#1}}
-\newcommand{\Figref}[1]{\figurename~\ref{fig:#1}}
+\newcommand{\Tabref}[1]{\tablename\ref{tab:#1}}
+\newcommand{\Figref}[1]{\figurename\ref{fig:#1}}
 \newcommand{\Equref}[1]{式~(\ref{equ:#1})}
+\newcommand{\Lstref}[1]{\lstlistingname~\ref{lst:#1}}
 
 % 段組
 \usepackage{multicol}
