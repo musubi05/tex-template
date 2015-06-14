@@ -39,6 +39,7 @@
 \newcommand{\argmax}{\operatornamewithlimits{\mathrm{arg\,max}}}
 \newcommand{\for}{\text{~~for~~}}
 \newcommand{\suchthat}{\text{~~s.t.~~}}
+\newcommand{\Tr}[1]{#1^\mathrm{T}}
 % 微調整
 \let\originalforall\forall
 \let\originalexists\exists
@@ -55,9 +56,9 @@
 \renewcommand{\lstlistingname}{List}
 \lstset{
   language={C},
-  basicstyle={\scriptsize},
+  basicstyle={\scriptsize\ttfamily},
   identifierstyle={\scriptsize},
-  commentstyle={\scriptsize\itshape},
+  commentstyle={\scriptsize},
   keywordstyle={\scriptsize\bfseries},
   ndkeywordstyle={\scriptsize},
   stringstyle={\scriptsize\ttfamily},
@@ -72,6 +73,7 @@
   numbersep=1zw,
   lineskip=-0.5ex,
   tabsize=4,
+  keepspaces=true,
 }
 % 擬似コード
 \usepackage{algorithm}
