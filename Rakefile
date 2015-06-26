@@ -27,7 +27,7 @@ FIG = FileList["#{FIG_DIR}/**/*"].map {|source|
     case source
     when /\.pdf$/i then ->{}
     when /\.eps$/i then ->{sh 'epstopdf', source}
-    when /\.(jpe?g|png)/i then ->{sh 'convert', source, pdf}
+    when /\.(jpe?g|png|svg)/i then ->{sh 'convert', source, pdf}
     end
 
   unless command
