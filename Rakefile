@@ -1,89 +1,99 @@
 require 'rake/clean'
 require 'pathname'
 
-task default: 'open'
 
-# dist directory
+# --- config
+
 DIST_DIR = 'dist'
-directory DIST_DIR
-
-# target
-TARGET_PDF = "#{DIST_DIR}/thesis.pdf"
-file TARGET_PDF => DIST_DIR
-CLOBBER.include(TARGET_PDF)
-
-# sources
 SRC_DIR = 'src'
-SOURCES = FileList["#{SRC_DIR}/**/*"]
-TEX = SOURCES.select {|s| s.match(/\.(tex|sty)/i)}
-MARKDOWN = SOURCES.select {|s| s.match(/\.m(ark)?d(own)?/i)}
+FIG_DIR = "fig"
 
-# create task to convert all images file to pdf files
-FIG_DIR = "#{SRC_DIR}/fig"
-FIG = FileList["#{FIG_DIR}/**/*"].map {|source|
-  pdf = source.ext('pdf')
+ROOT_TEX = 'root.tex'
+TARGET_BASENAME = "document.pdf"
 
-  command = 
-    case source
-    when /\.pdf$/i then ->{}
-    when /\.eps$/i then ->{sh 'epstopdf', source}
-    when /\.(jpe?g|png|svg|bmp)/i then ->{sh 'convert', source, pdf}
-    end
+PREVIEW = ->(pdf){sh 'pcmanfm', pdf}
 
-  unless command
-    next
+FIG_TO_PDF = ->(src, dst){
+  case src
+  when /\.eps$/i then 
+    ->{sh 'epstopdf', src, "--outfile='#{dst}'"}
+  when /\.(jpe?g|png|svg|bmp)/i then 
+    ->{sh 'convert', src, dst}
   end
-  
-  unless source.match(/\.pdf$/)
-    file pdf => source do
-      command.call
-    end
-    CLEAN.include(pdf)
-  end
-  
-  pdf
-}.select{|f| f}
-XBB = FIG.ext('xbb')
-
-desc 'Build target pdf file.'
-task build: TARGET_PDF
-file TARGET_PDF => FileList[TEX, FIG, XBB, MARKDOWN.ext('tex')]
-
-desc 'Open target pdf file.'
-task open: TARGET_PDF do |task|
-  sh 'evince', task.prerequisites[0]
-end
-
-desc 'Convert any image file to pdf file.'
-task fig: FIG
-
-desc 'Create xbb files from pdf files.'
-task xbb: XBB
-
-rule '.xbb' => '.pdf' do |task|
-  sh 'extractbb', task.source
-end
-CLEAN.include(XBB)
-
-rule '.tex' => '.md' do |task|
-  sh 'pandoc', task.source, '-o', task.name
-end
-CLEAN.include(MARKDOWN.ext('tex'))
+}
 
 rule '.pdf' => '.tex' do |task|
   basename = File.basename(task.source)
   cd Pathname.new(task.name).parent do
-    sh 'platex', '-kanji=UTF8', basename
-    sh 'platex', '-kanji=UTF8', basename
-    sh 'dvipdfmx', basename.ext('dvi')
+    sh 'latexmk', '-r', 'config/latexmkrc', '-pdfdvi', basename
   end
 end
-CLEAN.include(TEX.ext('dvi'), TEX.ext('aux'), TEX.ext('log'), TEX.ext('xbb'))
 
-rule %r{^#{DIST_DIR}/.+\.pdf} => "%{^#{DIST_DIR},#{SRC_DIR}}X.pdf" do |task|
+rule '.tex' => '.md' do |task|
+  sh 'pandoc', task.source, '-o', task.name
+end
+
+rule '.xbb' => '.pdf' do |task|
+  sh 'extractbb', task.source
+end
+
+
+# ---- files
+
+directory DIST_DIR
+TARGET = "#{DIST_DIR}/#{TARGET_BASENAME}"
+file TARGET => DIST_DIR
+
+SRC = FileList[ROOT_TEX] + FileList["#{SRC_DIR}/**/*"]
+TEX = SRC.select {|s| s.match(/\.(tex|sty)/i)}
+MARKDOWN = SRC.select {|s| s.match(/\.m(ark)?d(own)?/i)}
+
+FIG = FileList["#{FIG_DIR}/**/*"]
+FIG_PDF = FIG.ext('pdf')
+FIG_XBB = FIG_PDF.ext('xbb')
+FIG.zip(FIG_PDF) {|src, dst|
+  convert_cmd = FIG_TO_PDF[src, dst]
+  if convert_cmd and not src.match(/\.pdf$/)
+    file dst => src do
+      convert_cmd.call
+    end
+    CLEAN.include(dst)
+  end
+}
+
+
+# ---- tasks
+
+task default: 'preview'
+
+desc "Build #{TARGET}"
+task build: TARGET
+file TARGET => FileList[TEX, FIG_PDF, FIG_XBB, MARKDOWN.ext('tex')]
+
+desc "Preview #{TARGET}"
+task preview: TARGET do |task|
+  PREVIEW[task.prerequisites[0]]
+end
+
+desc 'Convert all image files to pdf.'
+task fig_pdf: FIG_PDF
+
+desc 'Create xbb files from pdf files.'
+task fig_xbb: FIG_XBB
+
+rule TARGET => ROOT_TEX.ext('pdf') do |task|
   Rake::Task[task.source].invoke('paty')
   sh 'mv', task.source, task.name
 end
+
+
+# ---- clean
+
+CLEAN.include(FIG_XBB)
+CLEAN.include(MARKDOWN.ext('tex'))
+CLEAN.include(FileList[ROOT_TEX.ext('*')])
+CLEAN.exclude(ROOT_TEX)
+CLOBBER.include(TARGET)
 
 CLEAN.existing!
 CLEAN.uniq!
