@@ -11,7 +11,7 @@ FIG_DIR = "fig"
 ROOT_TEX = 'root.tex'
 TARGET_BASENAME = "document.pdf"
 
-PREVIEW = ->(pdf){sh 'pcmanfm', pdf}
+PREVIEW = ->(pdf){sh 'xdg-open', pdf}
 
 FIG_TO_PDF = ->(src, dst){
   case src
@@ -25,7 +25,7 @@ FIG_TO_PDF = ->(src, dst){
 rule '.pdf' => '.tex' do |task|
   basename = File.basename(task.source)
   cd Pathname.new(task.name).parent do
-    sh 'latexmk', '-r', 'config/latexmkrc', '-pdfdvi', basename
+    sh 'latexmk', '-r', 'etc/latexmkrc', '-pdfdvi', basename
   end
 end
 
