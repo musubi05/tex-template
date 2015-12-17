@@ -1,101 +1,28 @@
 % 古いパッケージに警告を出す
 \RequirePackage[l2tabu, orthodox]{nag}
 
-% text font
-\usepackage{newtxtext}
-% math font
-\usepackage{amssymb}
+% フォント
+\usepackage{newtxtext} % テキスト
+\usepackage{amssymb} % 数式
 
-% 図
-\usepackage[dvipdfmx]{graphicx}
-% 図の位置の固定
-\usepackage{here}
-% 図表を並べる
-\usepackage{subcaption}
+% 定番
+\usepackage[dvipdfmx]{graphicx} % 図の挿入
+\usepackage{multicol} % 段組
+\usepackage{fancyhdr} % ヘッダ
+\usepackage{here} % 図表の位置固定
+\usepackage{enumitem} % enumrateの拡張
+\usepackage{mathtools} % amsmathの拡張
+\usepackage{subcaption} % 図表を並べる
+\usepackage{ascmac} % 枠線
+\usepackage{listings} % ソースコードの挿入
+\usepackage{sty/jlisting} % ソースコードの挿入(日本語)
 
-% enumrate の拡張
-\usepackage{enumitem}
+% 数学・工学
+\usepackage{amsthm} % 定理や定義
+\usepackage{siunitx} % SI単位
+\usepackage{algorithm} % 擬似コード
+\usepackage[noend]{algpseudocode} % 擬似コード
 
-% amsmath の拡張
-\usepackage{mathtools}
-% bm
-\newcommand{\bm}[1]{\boldsymbol{#1}}
-% 定理番号
-\let\openbox\relax
-\usepackage{amsthm}  
-\newtheorem{theo}{定理}[section]
-\newtheorem{defi}{定義}[section]
-\newtheorem{lemm}{補題}[section]
-% SI単位
-\usepackage{siunitx}
-% よく使う数式
-\newcommand{\D}{\mathrm{d}}
-\newcommand{\Div}{\mathrm{div}\,}
-\newcommand{\Grad}{\mathrm{grad}\,}
-\newcommand{\Rot}{\mathrm{rot}\,}
-\newcommand{\diff}[2]{\frac{\D #1}{\D #2}}
-\newcommand{\pdiff}[2]{\frac{\partial #1}{\partial #2}}
-\newcommand{\argmin}{\operatornamewithlimits{\mathrm{arg\,min}}}
-\newcommand{\argmax}{\operatornamewithlimits{\mathrm{arg\,max}}}
-\newcommand{\for}{\text{~~for~~}}
-\newcommand{\suchthat}{\text{~~s.t.~~}}
-\newcommand{\Tr}[1]{#1^\mathrm{T}}
-\newcommand{\Comb}[2]{\begin{pmatrix} #1 \\ #2 \end{pmatrix}}
-% 微調整
-\let\originalforall\forall
-\let\originalexists\exists
-\renewcommand{\forall}{\originalforall\,}
-\renewcommand{\exists}{\originalexists\,}
-
-% 枠線
-\usepackage{ascmac}
-\let\Return\relax  % algorithmと競合
-
-% ソースコード
-\usepackage{listings}
-\usepackage{sty/jlisting}
-\renewcommand{\lstlistingname}{List}
-\lstset{
-  language={C},
-  basicstyle={\scriptsize\ttfamily},
-  identifierstyle={\scriptsize},
-  commentstyle={\scriptsize},
-  keywordstyle={\scriptsize\bfseries},
-  ndkeywordstyle={\scriptsize},
-  stringstyle={\scriptsize\ttfamily},
-  frame={tb},
-  breaklines=true,
-  columns=[l]{fullflexible},
-  numbers=left,
-  xrightmargin=0zw,
-  xleftmargin=3zw,
-  numberstyle={\scriptsize},
-  stepnumber=1,
-  numbersep=1zw,
-  lineskip=-0.5ex,
-  tabsize=4,
-  keepspaces=true,
-}
-% 擬似コード
-\usepackage{algorithm}
-\usepackage[noend]{algpseudocode}
-
-% 図表番号の書式
-\renewcommand{\tablename}{Table~}
-\renewcommand{\figurename}{Fig.}
-% 式番号の書式
-\makeatletter
-\renewcommand{\theequation}{\thesection.\arabic{equation}}
-\@addtoreset{equation}{section}
-\makeatother
-% 参照コマンド
-\newcommand{\Tabref}[1]{\tablename\ref{tab:#1}}
-\newcommand{\Figref}[1]{\figurename\ref{fig:#1}}
-\newcommand{\Equref}[1]{式~(\ref{equ:#1})}
-\newcommand{\Lstref}[1]{\lstlistingname~\ref{lst:#1}}
-
-% 段組
-\usepackage{multicol}
-
-% ヘッダ
-\usepackage{fancyhdr}
+% 他
+\usepackage{sty/mymath}
+\usepackage{sty/myformat}

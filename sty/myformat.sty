@@ -1,0 +1,46 @@
+%% 書式設定
+
+% 図
+\renewcommand{\figurename}{Fig.}
+\newcommand{\Figref}[1]{\figurename\ref{fig:#1}}
+
+% 表
+\renewcommand{\tablename}{Table~}
+\newcommand{\Tabref}[1]{\tablename\ref{tab:#1}}
+
+% 式
+\makeatletter
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+\@addtoreset{equation}{section}
+\makeatother
+\newcommand{\Equref}[1]{式~(\ref{equ:#1})}
+
+% 定理・定義・補題
+\newtheorem{theo}{定理}[section]
+\newtheorem{defi}{定義}[section]
+\newtheorem{lemm}{補題}[section]
+
+% ソースコード
+\renewcommand{\lstlistingname}{List}
+\lstset{
+  language={C},
+  basicstyle={\scriptsize\ttfamily},
+  identifierstyle={\scriptsize},
+  commentstyle={\scriptsize},
+  keywordstyle={\scriptsize\bfseries},
+  ndkeywordstyle={\scriptsize},
+  stringstyle={\scriptsize\ttfamily},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-0.5ex,
+  tabsize=4,
+  keepspaces=true,
+}
+\newcommand{\Lstref}[1]{\lstlistingname~\ref{lst:#1}}

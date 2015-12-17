@@ -1,0 +1,22 @@
+%% 数式まわりの調整/拡張
+
+% 独自コマンド
+\newcommand{\bm}[1]{\boldsymbol{#1}}
+\newcommand{\D}{\mathrm{d}}
+\newcommand{\Div}{\mathrm{div}\,}
+\newcommand{\Grad}{\mathrm{grad}\,}
+\newcommand{\Rot}{\mathrm{rot}\,}
+\newcommand{\diff}[2]{\frac{\D #1}{\D #2}}
+\newcommand{\pdiff}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\argmin}{\operatornamewithlimits{\mathrm{arg\,min}}}
+\newcommand{\argmax}{\operatornamewithlimits{\mathrm{arg\,max}}}
+\newcommand{\for}{\text{~~for~~}}
+\newcommand{\suchthat}{\text{~~s.t.~~}}
+\newcommand{\T}[1]{#1^\mathrm{T}}
+\newcommand{\Comb}[2]{\begin{pmatrix} #1 \\ #2 \end{pmatrix}}
+
+% 既存コマンドの微調整
+\let\originalforall\forall
+\let\originalexists\exists
+\renewcommand{\forall}{\originalforall\,}
+\renewcommand{\exists}{\originalexists\,}
