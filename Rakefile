@@ -1,6 +1,6 @@
 require 'rake/clean'
 require 'pathname'
-
+require 'rbconfig'
 
 # --- config
 
@@ -11,8 +11,15 @@ FIG_DIR = "fig"
 ROOT_TEX = 'root.tex'
 TARGET_BASENAME = "document.pdf"
 
-PREVIEW = ->(pdf){sh 'xdg-open', pdf}
-
+case RbConfig::CONFIG['host_os']
+when /darwin|mac os/
+  PREVIEW = ->(pdf){sh 'open', pdf}
+when /linux/
+  PREVIEW = ->(pdf){sh 'xdg-open', pdf}
+else
+  raise 'assert'
+end
+  
 FIG_TO_PDF = ->(src, dst){
   case src
   when /\.eps$/i then 
