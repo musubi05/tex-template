@@ -1,5 +1,7 @@
 tags
 dist/*
+fig/*
+!**/.gitkeep
 
 *.aux
 *.glo

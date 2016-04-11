@@ -1,21 +1,38 @@
 # tex-template
 texで文章を書くとき用のテンプレートディレクトリ
 
+## Environment
+
+- TeX Live
+- Ruby        (for Rake)
+- ImageMagick (for convert raster image files to PDF)
+- Inkscape    (for convert vector image files to PDF)
+- Pandoc      (for convert markdown to tex)
+
 ## 使用方法
 ``` bash
 $ rake
 ```
 でビルドとプレビューが行われる.
 
+``` bash
+$ rake clear
+```
+で中間ファイルを削除する.
+
+``` bash
+$ rake clobber
+```
+で全ての生成されたファイルが削除される.
+
 ## 構成
 ```
-% tree
+% tree --charset ascii
 .
-├── Rakefile
-├── dist      % 生成されたpdfファイルが置かれる場所
-├── etc       % ビルド関係の設定ファイル
-├── fig       % 画像ファイルを置いておく場所 (rake時に自動でpdf化 + xbb生成)
-├── root.tex  % コンパイルのルートファイル
-├── src       % texファイル置き場. (markdownファイルがあればpandocでtexに変換される)
-└── sty       % styファイル置き場.
+|-- Rakefile  % ビルド用Rakefile
+|-- dist      % 生成されたpdfファイルが置かれる場所
+|-- etc       % ビルド関係の設定ファイル
+|-- root.tex  % コンパイルのルートファイル
+|-- src       % texファイル置き場 (markdownファイルがあればpandocでtexに変換される)
+`-- sty       % styファイル置き場
 ```

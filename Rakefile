@@ -1,65 +1,108 @@
-require 'rake/clean'
-require 'pathname'
-require 'rbconfig'
+require "rake/clean"
+require "pathname"
+require "rbconfig"
+require "fileutils"
 
-# --- config
+PROJECT_ROOT = File.expand_path(__dir__)
 
-DIST_DIR = 'dist'
-SRC_DIR = 'src'
-FIG_DIR = "fig"
+# ---- config
 
-ROOT_TEX = 'root.tex'
-TARGET_BASENAME = "document.pdf"
+DIST_DIR = "#{PROJECT_ROOT}/dist"
+SRC_DIR = "#{PROJECT_ROOT}/src"
+FIG_DIR = "#{PROJECT_ROOT}/fig"
+ETC_DIR = "#{PROJECT_ROOT}/etc"
+
+ROOT_TEX = "#{PROJECT_ROOT}/root.tex"
+
+TARGET = "#{DIST_DIR}/document.pdf"
+
+module HostOS 
+  class Base
+    include Rake::DSL
+    
+    def preview_pdf(pdf)
+      raise NotImplementedError.new
+    end
+    
+    def fig_to_pdf(fig, pdf)
+      case fig
+      when /\.(eps|svg)$/i then   
+        # vector image: convert with inkscape
+        ->(){ sh "inkscape", "-f", fig, "-A", pdf }
+      when /\.(jpe?g|png|bmp)/i then  
+        # bitmap image: convert with ImageMagick
+        ->(){ sh "convert", fig, pdf }
+      end
+    end
+    
+    def markdown_to_tex(md, tex)
+      sh "pandoc", md, "-o", tex
+    end
+  end
+  
+  class Windows < Base
+    def preview_pdf(pdf)
+      sh "start", pdf
+    end
+  end
+  
+  class Mac < Base
+    def preview_pdf(pdf)
+      sh "open", pdf
+    end
+  end
+  
+  class Linux < Base
+    def preview_pdf(pdf)
+      sh "xdg-open", pdf
+    end
+  end
+end
+
+module TeXLive
+  extend Rake::DSL
+  extend self
+  
+  def tex_to_pdf(tex, pdf, latexmkrc)
+    cd Pathname.new(tex).parent do
+      sh "latexmk", "-r", latexmkrc, "-pdfdvi", File.basename(tex)
+    end
+  end
+  
+  def extractbb(pdf)
+    cd Pathname.new(pdf).parent do
+      sh "extractbb", File.basename(pdf)
+    end
+  end
+end
+
+# ---- host os
 
 case RbConfig::CONFIG['host_os']
+when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+  HOST_OS = HostOS::Windows.new
 when /darwin|mac os/
-  PREVIEW = ->(pdf){sh 'open', pdf}
+  HOST_OS = HostOS::Mac.new
 when /linux/
-  PREVIEW = ->(pdf){sh 'xdg-open', pdf}
+  HOST_OS = HostOS::Linux.new
 else
-  raise 'assert'
+  raise "unknown os"
 end
-  
-FIG_TO_PDF = ->(src, dst){
-  case src
-  when /\.eps$/i then 
-    ->{sh 'epstopdf', src, "--outfile='#{dst}'"}
-  when /\.(jpe?g|png|svg|bmp)/i then 
-    ->{sh 'convert', src, dst}
-  end
-}
-
-rule '.pdf' => '.tex' do |task|
-  basename = File.basename(task.source)
-  cd Pathname.new(task.name).parent do
-    sh 'latexmk', '-r', 'etc/latexmkrc', '-pdfdvi', basename
-  end
-end
-
-rule '.tex' => '.md' do |task|
-  sh 'pandoc', task.source, '-o', task.name
-end
-
-rule '.xbb' => '.pdf' do |task|
-  sh 'extractbb', task.source
-end
-
-
+ 
 # ---- files
 
 directory DIST_DIR
-TARGET = "#{DIST_DIR}/#{TARGET_BASENAME}"
 file TARGET => DIST_DIR
 
 SRC = FileList[ROOT_TEX] + FileList["#{SRC_DIR}/**/*"]
 TEX = SRC.select {|s| s.match(/\.(tex|sty)/i)}
-MARKDOWN = SRC.select {|s| s.match(/\.m(ark)?d(own)?/i)}
+MARKDOWN = SRC.select {|s| s.match(/\.(md|markdown)/i)}
 
-FIG = FileList["#{FIG_DIR}/**/*"]
-FIG_PDF = FIG.ext('pdf')
-FIG_XBB = FIG_PDF.ext('xbb')
+FIG = FileList["#{FIG_DIR}/**/*.*"]
+FIG_PDF = FIG.ext("pdf")
+FIG_XBB = FIG_PDF.ext("xbb")
 FIG.zip(FIG_PDF) {|src, dst|
-  convert_cmd = FIG_TO_PDF[src, dst]
+  convert_cmd = HOST_OS.fig_to_pdf(src, dst)
   if convert_cmd and not src.match(/\.pdf$/)
     file dst => src do
       convert_cmd.call
@@ -68,37 +111,49 @@ FIG.zip(FIG_PDF) {|src, dst|
   end
 }
 
+# ---- rules
+
+rule ".pdf" => ".tex" do |task|
+  TeXLive.tex_to_pdf(task.source, task.name, "#{ETC_DIR}/latexmkrc")
+end
+
+rule ".tex" => ".md" do |task|
+  HOST_OS.markdown_to_tex(task.source, task.name)
+end
+
+rule ".xbb" => ".pdf" do |task|
+  TeXLive.extractbb(task.source)
+end
+
+rule TARGET => ROOT_TEX.ext("pdf") do |task|
+  Rake::Task[task.source].invoke("paty")
+  FileUtils.mv(task.source, task.name)
+end
 
 # ---- tasks
 
-task default: 'preview'
+task default: "preview"
 
 desc "Build #{TARGET}"
 task build: TARGET
-file TARGET => FileList[TEX, FIG_PDF, FIG_XBB, MARKDOWN.ext('tex')]
+file TARGET => FileList[TEX, FIG_PDF, FIG_XBB, MARKDOWN.ext("tex")]
 
 desc "Preview #{TARGET}"
 task preview: TARGET do |task|
-  PREVIEW[task.prerequisites[0]]
+  HOST_OS.preview_pdf(task.prerequisites[0])
 end
 
-desc 'Convert all image files to pdf.'
+desc "Convert all image files to pdf."
 task fig_pdf: FIG_PDF
 
-desc 'Create xbb files from pdf files.'
+desc "Create xbb files from pdf files."
 task fig_xbb: FIG_XBB
 
-rule TARGET => ROOT_TEX.ext('pdf') do |task|
-  Rake::Task[task.source].invoke('paty')
-  sh 'mv', task.source, task.name
-end
-
-
-# ---- clean
+# ---- clean/clobber
 
 CLEAN.include(FIG_XBB)
-CLEAN.include(MARKDOWN.ext('tex'))
-CLEAN.include(FileList[ROOT_TEX.ext('*')])
+CLEAN.include(MARKDOWN.ext("tex"))
+CLEAN.include(FileList[ROOT_TEX.ext("*")])
 CLEAN.exclude(ROOT_TEX)
 CLOBBER.include(TARGET)
 
