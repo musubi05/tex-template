@@ -36,3 +36,6 @@ $ rake clobber
 |-- src       % texファイル置き場 (markdownファイルがあればpandocでtexに変換される)
 `-- sty       % styファイル置き場
 ```
+
+## License
+WTFPL
