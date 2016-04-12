@@ -1,0 +1,137 @@
+%
+%       研究会資料用スタイルファイル    Ver.3.2    '93/10/18
+%               Ver.2   : 英語のヘディング追加
+%               Ver.2.1 : Table のcaption を\bf Table に変更
+%               Ver.3   : UNIX ASCII-JTeX 用にサイズを変更，10pt-12pt
+%                         に対応
+%               Ver.3.1 : eqnarray の = や > の両側の空白を少なくした．by K.Igarashi
+%               Ver.3.2 : 数式番号に節番号を組み込んだ．by K.Igarashi
+%
+\typeout{Document Style Option 'Weekly Meeting Memo' Ver.3, (93.May) by K.Hosoda}
+
+%       タイトルの変更
+% 日付，hedding を右上寄せにする
+\def\headding#1{\gdef\@headding{#1}}
+
+%\def\makesimpletitle{
+\def\@maketitle{\newpage
+ \null
+ \begin{flushright} {\@date \par} {\@headding} \end{flushright}
+ \vskip 2em \begin{center}
+ {\LARGE \@title \par} \vskip 1.5em {\large \lineskip .5em
+\begin{tabular}[t]{c}\@author 
+ \end{tabular}\par} 
+            \end{center}
+ \par
+ \vskip 1.5em} 
+
+%%%%右上タイトル
+%\headding{Asada Lab. Weekly Meeting Memo\\浅田研究室輪講資料}
+%\headding{Asada Lab. Weekly Meeting Memo\\浅田研究室研究会資料}
+%\headding{創成工学ゼミナール資料}
+%\headding{Asada Lab. Meeting Memo\\浅田研究室中間報告会資料}
+%\headding{卒業研究中間発表会資料}
+%\headding{浅田研究室文献紹介資料}
+%\headding{特別合同研究発表会資料}
+%\headding{浅田研輪講クラブ資料}
+%\headding{浅田研究室B4輪講資料}
+\headding{TeX講習会}
+%\headding{M seminar presentatio}
+
+%\maketitle \let\makesimpletitle\relax}
+
+%       abst 環境の題目を 摘要 に変える
+\def\abstract{\if@twocolumn
+\section*{摘要}
+\else \small 
+\begin{center}
+{\bf 摘要\vspace{-.5em}\vspace{0pt}} 
+\end{center}
+\quotation 
+\fi}
+
+%       Fig. 環境の caption を " {\bf Fig. ?} " に変える
+
+\long\def\@makecaption#1#2{
+ \vskip 10pt 
+ \setbox\@tempboxa\hbox{#1 #2}
+ \ifdim \wd\@tempboxa >\hsize \unhbox\@tempboxa\par \else \hbox
+to\hsize{\hfil\box\@tempboxa\hfil} 
+ \fi}
+%\def\fnum@figure{{\bf 図\thefigure}}
+\def\fnum@figure{{\bf Fig.\thefigure}}
+
+%       Table 環境の caption を `` {\bf Table ?}'' に変える
+\def\fnum@table{{\bf Table \thetable}}
+
+%       文献の[]をとる
+%\renewcommand{\@cite}[2]{{#1\if@tempswa , #2\fi}}
+%\renewcommand{\@biblabel}[1]{#1\hfill}
+
+%       文献引用番号を肩に乗せる．
+%\def\@cite#1#2{$^{\mbox{\scriptsize {#1\if@tempswa , #2\fi})}}$}
+
+%       サイズ，行間の指定
+%                from  "a4j" document style option.
+%
+\@ifundefined{@twoc}{%
+%\topmargin-.3in% This is original margin
+\topmargin -1.7cm
+\oddsidemargin0pt
+\evensidemargin0pt
+\parindent1zw
+\@ifundefined{@lands}{\ifcase \@ptsize
+    % mods for 10 pt
+    \textheight43\baselineskip
+    \textwidth47zw
+\or % mods for 11 pt 
+    \textheight42\baselineskip
+    \textwidth43zw
+\or % mods for 12 pt
+    \textheight39\baselineskip
+    \textwidth40zw
+\fi}{\ifcase\@ptsize
+    % mods for 10 pt, landscap
+    \textheight27\baselineskip
+    \textwidth73zw
+\or % mods for 11 pt, landscap
+    \textheight26\baselineskip
+    \textwidth68zw
+\or % mods for 12 pt, landscap
+    \textheight25\baselineskip
+    \textwidth61zw
+\fi}
+\advance\textheight\topskip
+\def\@ps@{1}}{\@warning{Sorry, I ignored sizing of 'lab' style}}
+
+% 数式番号に節番号を組み込んだ．
+\@addtoreset{equation}{section}
+\def\theequation
+      {\thesection.\arabic{equation}}
+
+% eqnarray の = や > の両側の空白を少なくした．これは最後に置くこと．by K.Igarashi
+\def\eqnarray{%
+  \stepcounter{equation}%
+  \let\@currentlabel=\theequation
+  \global\@eqnswtrue
+  \global\@eqcnt\z@
+  \tabskip\@centering
+  \let\\=\@eqncr
+  $$\halign to \displaywidth\bgroup\@eqnsel\hskip\@centering
+  $\displaystyle\tabskip\z@{##}$&\global\@eqcnt\@ne
+  \hfil$\displaystyle{{}##{}}$\hfil
+  &\global\@eqcnt\tw@$\displaystyle\tabskip\z@{##}$\hfil
+  \tabskip\@centering&\llap{##}\tabskip\z@\cr}
+% END OF FILE
+
+
+
+
+
+
+
+
+
+
+
+
