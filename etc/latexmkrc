@@ -1,2 +1,2 @@
-$latex = 'platex %O -synctex=1 -interaction=batchmode -kanji=UTF8 %S';
+$latex = 'platex %O -synctex=1 -interaction=nonstopmode -kanji=UTF8 %S';
 $dvipdf = 'dvipdfmx %O -o %D %S';
