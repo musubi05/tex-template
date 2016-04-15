@@ -9,6 +9,7 @@ PROJECT_ROOT = File.expand_path(__dir__)
 
 DIST_DIR = "#{PROJECT_ROOT}/dist"
 SRC_DIR = "#{PROJECT_ROOT}/src"
+BIB_DIR = "#{PROJECT_ROOT}/bib"
 FIG_DIR = "#{PROJECT_ROOT}/fig"
 ETC_DIR = "#{PROJECT_ROOT}/etc"
 
@@ -98,6 +99,8 @@ SRC = FileList[ROOT_TEX] + FileList["#{SRC_DIR}/**/*"]
 TEX = SRC.select {|s| s.match(/\.(tex|sty)/i)}
 MARKDOWN = SRC.select {|s| s.match(/\.(md|markdown)/i)}
 
+BIB = FileList["#{BIB_DIR}/**/*"]
+
 FIG = FileList["#{FIG_DIR}/**/*.*"]
 FIG_PDF = FIG.ext("pdf")
 FIG_XBB = FIG_PDF.ext("xbb")
@@ -136,7 +139,7 @@ task default: "preview"
 
 desc "Build #{TARGET}"
 task build: TARGET
-file TARGET => FileList[TEX, FIG_PDF, FIG_XBB, MARKDOWN.ext("tex")]
+file TARGET => FileList[TEX, BIB, FIG_PDF, FIG_XBB, MARKDOWN.ext("tex")]
 
 desc "Preview #{TARGET}"
 task preview: TARGET do |task|
