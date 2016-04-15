@@ -99,7 +99,7 @@ SRC = FileList[ROOT_TEX] + FileList["#{SRC_DIR}/**/*"]
 TEX = SRC.select {|s| s.match(/\.(tex|sty)/i)}
 MARKDOWN = SRC.select {|s| s.match(/\.(md|markdown)/i)}
 
-BIB = FileList["#{BIB_DIR}/**/*"]
+BIB = FileList["#{BIB_DIR}/**/*.bib"]
 
 FIG = FileList["#{FIG_DIR}/**/*.*"]
 FIG_PDF = FIG.ext("pdf")
