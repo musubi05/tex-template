@@ -2,16 +2,24 @@
 \usepackage{sty/mystd}
 \usepackage{sty/report}
 
+\begin{document}
+% -- タイトル
+\title{Your document title}
+\author{Your name}
+\date{\today}
+\thispagestyle{fancy}
+\maketitle
+
+% -- ヘッダとフッタの設定
 \pagestyle{fancy}
 \fancyhead{}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0pt}
 
-\title{}
-\author{}
-\date{\today}
+% -- 本文
+\input{src/body.tex}
 
-\begin{document}
-% \maketitle\thispagestyle{fancy}
-\input{src/sections.tex}
+% -- 参考文献
+\bibliographystyle{jplain}
+\bibliography{bib/bibliographies}
 \end{document}

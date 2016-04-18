@@ -34,6 +34,7 @@ $ rake clobber
 |-- etc       % ビルド関係の設定ファイル
 |-- root.tex  % コンパイルのルートファイル
 |-- src       % texファイル置き場 (markdownファイルがあればpandocでtexに変換される)
+|-- bib       % bibファイル置き場
 `-- sty       % styファイル置き場
 ```
 
